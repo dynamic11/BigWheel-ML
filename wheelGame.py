@@ -14,6 +14,10 @@ class WheelGame:
         self.generate_wheel()
         return self.wheel
 
+    def reset(self):
+        self.balance = 20
+        return self.balance
+
     def generate_wheel(self):
         for x in range(0, 24):
             self.wheel.append(1)
@@ -28,9 +32,7 @@ class WheelGame:
         for x in range(0, 2):
             self.wheel.append(50)
 
-    def take_turn(self, bet):
-        # deduct bet
-        self.balance = self.balance - 1
+    def take_turn(self, bets, amounts):
 
         # spin wheel
         random.seed(datetime.now())
@@ -38,16 +40,13 @@ class WheelGame:
         self.wheel[value]
 
         # if wheel land on bet then
-        if self.wheel[value] == bet:
-            self.balance = self.balance + (2 * self.wheel[value])
+        for i in range(len(bets)):
+            if self.wheel[value] == bets[i]:
+                # add if win
+                self.balance = self.balance + (amounts[i] * self.wheel[value])
+            else:
+                # deduct amount bet if lost
+                self.balance = self.balance - amounts[i]
 
         #print(value)
         return self.balance
-
-
-
-if __name__ == "__main__":
-    game = SnakeGame(gui = True)
-    game.start()
-    for _ in range(20):
-        game.step(randint(0,3))
